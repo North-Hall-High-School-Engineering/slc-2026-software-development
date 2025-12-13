@@ -28,7 +28,7 @@ If running on an NVIDIA GPU, make sure to install CUDA from https://developer.nv
 Common Issues
 
 "Torch not compiled with CUDA enabled"
-Install CUDA from https://developer.nvidia.com/cuda-downloads or switch to cpu device in train.py. If you have already installed cuda, just restart your terminal and the problem will likely be fixed. If the issue persists, restart your computer and/or re-install cuda.
+Install CUDA from https://developer.nvidia.com/cuda-downloads or switch to cpu device within torch. If you have already installed cuda, just restart your terminal and the problem will likely be fixed. If the issue persists, restart your computer and/or re-install cuda.
 
 If it STILL doesen't work, install torch matching your CUDA version with the following command (within the venv)
 ```bash
