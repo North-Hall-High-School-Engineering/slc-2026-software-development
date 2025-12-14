@@ -1,0 +1,6 @@
+.venv
+venv
+__pycache__
+*.wav
+ser_checkpoints
+checkpoints
