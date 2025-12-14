@@ -1,1 +1,3 @@
 .venv
+model.safetensors
+training_args.bin
