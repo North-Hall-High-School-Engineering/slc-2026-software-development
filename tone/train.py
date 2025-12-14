@@ -1,7 +1,6 @@
 from functools import partial
 
 import torch
-import torch.nn as nn
 from datasets import Audio, load_dataset
 from transformers import (
     HubertModel,
@@ -11,7 +10,6 @@ from transformers import (
 )
 
 from models.combined import CombinedModel
-from models.regressor import RegressorHead
 
 
 def collate_fn_train(batch, feature_extractor):
