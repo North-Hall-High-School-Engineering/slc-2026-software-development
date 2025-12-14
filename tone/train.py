@@ -7,6 +7,7 @@ from transformers import (
     Trainer,
     TrainingArguments,
     Wav2Vec2FeatureExtractor,
+    EarlyStoppingCallback
 )
 
 from models.combined import CombinedModel
@@ -51,6 +52,13 @@ def collate_fn_train(batch, feature_extractor):
 if __name__ == "__main__":
     dataset = load_dataset("AbstractTTS/IEMOCAP")
     dataset = dataset.cast_column("audio", Audio(sampling_rate=16000))
+    
+    split = dataset["train"].train_test_split(test_size=0.2, seed = 67)
+    dataset = {"train": split["train"], "test": split["test"]}
+
+    val_split = dataset["train"].train_test_split(test_size=0.1, seed = 67)
+    dataset["train"] = val_split["train"]
+    dataset["validation"] = val_split["test"]
 
     feature_extractor = Wav2Vec2FeatureExtractor.from_pretrained(
         "facebook/hubert-base-ls960"
@@ -65,7 +73,7 @@ if __name__ == "__main__":
     training_args = TrainingArguments(
         output_dir="./checkpoints",
         per_device_train_batch_size=8,
-        num_train_epochs=3,
+        num_train_epochs=20,
         logging_steps=10,
         logging_strategy="steps",
         save_strategy="epoch",
@@ -74,6 +82,10 @@ if __name__ == "__main__":
         remove_unused_columns=False,
         dataloader_num_workers=4,
         dataloader_pin_memory=True,
+
+        load_best_model_at_end=True,
+        eval_strategy="epoch",
+        metric_for_best_model="eval_loss",
     )
 
     trainer = Trainer(
@@ -81,6 +93,12 @@ if __name__ == "__main__":
         args=training_args,
         train_dataset=dataset["train"],
         data_collator=partial(collate_fn_train, feature_extractor=feature_extractor),
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
+        eval_dataset = dataset["validation"],
     )
 
     trainer.train()
+
+    trainer.save_model(".")
+    test_metrics = trainer.evaluate(dataset["test"])
+    print(test_metrics)
