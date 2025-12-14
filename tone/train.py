@@ -51,6 +51,10 @@ def collate_fn_train(batch, feature_extractor):
 if __name__ == "__main__":
     dataset = load_dataset("AbstractTTS/IEMOCAP")
     dataset = dataset.cast_column("audio", Audio(sampling_rate=16000))
+    
+    split = dataset["train"].train_test_split(test_size=0.2, seed = 67)
+    dataset = {"train": split["train"], "test": split["test"]}
+
 
     feature_extractor = Wav2Vec2FeatureExtractor.from_pretrained(
         "facebook/hubert-base-ls960"
