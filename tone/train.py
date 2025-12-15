@@ -54,7 +54,6 @@ if __name__ == "__main__":
         print("Using GPU")
     else:
         print("Using CPU\nPlease refer to SETUP.md to set up CUDA/GPU for faster training")
-        exit()
 
     dataset = load_dataset("AbstractTTS/IEMOCAP")
     dataset = dataset.cast_column("audio", Audio(sampling_rate=16000))
