@@ -1,6 +1,8 @@
 from functools import partial
 
 import torch
+import evaluate
+import numpy as np
 from datasets import Audio, load_dataset
 from transformers import (
     EarlyStoppingCallback,
@@ -47,6 +49,17 @@ def collate_fn_train(batch, feature_extractor):
         "attention_mask": features["attention_mask"],
         "labels": labels,
     }
+
+metric = evaluate.load("mse")
+
+def compute_metrics(eval_pred):
+    predictions, labels = eval_pred
+
+    predictions = np.asarray(predictions, dtype=np.float32)
+    labels = np.asarray(labels, dtype=np.float32)
+
+    mse = np.mean((predictions - labels) ** 2)
+    return {"mse": mse}
 
 
 if __name__ == "__main__":
@@ -98,6 +111,7 @@ if __name__ == "__main__":
             )
         ],
         eval_dataset=dataset["validation"],
+        compute_metrics=compute_metrics,
     )
 
     trainer.train()
