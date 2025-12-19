@@ -8,7 +8,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(onnxruntime REQUIRED)
 find_package(gRPC REQUIRED)
+find_package(protobuf REQUIRED)
 
 add_executable(sentinel src/main.cpp)
 
-target_link_libraries(sentinel PRIVATE onnxruntime::onnxruntime grpc::grpc)
+target_link_libraries(sentinel PRIVATE onnxruntime::onnxruntime grpc::grpc protobuf::protobuf)
