@@ -1,4 +1,4 @@
-from functools import partial
+ from functools import partial
 
 import numpy as np
 import torch
@@ -37,6 +37,9 @@ def collate_fn_train(batch, feature_extractor):
                 item["neutral"],
                 item["surprise"],
                 item["happy"],
+                item["EmoAct"],
+                item["EmoVal"],
+                item["EmoDom"],
             ]
             for item in batch
         ],
