@@ -1,5 +1,6 @@
 [requires]
 onnxruntime/1.23.2
+grpc/1.72.0
 
 [generators]
 CMakeDeps
