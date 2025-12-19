@@ -1,6 +1,6 @@
 
 ```
-  conan install . --output-folder=build --build=missing
+  conan install . --build=missing
 ```
 
 ```
