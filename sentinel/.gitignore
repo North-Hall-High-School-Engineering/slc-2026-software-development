@@ -2,3 +2,7 @@ build
 CMakeUserPresets.json
 # for now
 *.onnx
+.cache
+
+# symlinked
+compile_commands.json
