@@ -12,5 +12,6 @@ type Loopback interface {
 }
 
 func NewLoopback() Loopback {
-	return &windowsLoopback{}
+	// Return platform-specific loopback struct
+	return newLoopback()
 }
