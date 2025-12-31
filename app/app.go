@@ -13,6 +13,12 @@ import (
 	"github.com/yalue/onnxruntime_go"
 )
 
+const (
+	SAMPLING_RATE = 16000
+	WINDOW_SIZE   = 2 * SAMPLING_RATE
+	HOP_SIZE      = SAMPLING_RATE / 2
+)
+
 type App struct {
 	ctx context.Context
 	lo  audio.Loopback
