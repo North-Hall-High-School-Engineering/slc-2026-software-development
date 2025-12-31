@@ -37,14 +37,12 @@ func NewApp() *App {
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 
-	// Audio
 	lo := audio.NewLoopback()
 	if err := lo.Start(); err != nil {
 		panic("failed to start loopback: " + err.Error())
 	}
 	a.lo = lo
 
-	// ORT runtime
 	runtimePath, err := ort.ExtractEmbeddedOrt()
 	if err != nil {
 		panic(err)
@@ -55,7 +53,6 @@ func (a *App) startup(ctx context.Context) {
 		panic(err)
 	}
 
-	// Extract model
 	data, err := assets.FS.ReadFile("models/tone.onnx")
 	if err != nil {
 		panic(err)
@@ -66,9 +63,6 @@ func (a *App) startup(ctx context.Context) {
 		panic(err)
 	}
 
-	// ----------------------------
-	// Pre-create tensors
-	// ----------------------------
 	inputShape := onnxruntime_go.NewShape(1, WINDOW_SIZE)
 	maskShape := onnxruntime_go.NewShape(1, WINDOW_SIZE)
 	outputShape := onnxruntime_go.NewShape(1, 9)
@@ -83,7 +77,6 @@ func (a *App) startup(ctx context.Context) {
 		panic(err)
 	}
 
-	// attention mask = all ones
 	for i := range a.maskTensor.GetData() {
 		a.maskTensor.GetData()[i] = 1
 	}
@@ -93,9 +86,6 @@ func (a *App) startup(ctx context.Context) {
 		panic(err)
 	}
 
-	// ----------------------------
-	// Create session WITH tensors
-	// ----------------------------
 	a.session, err = onnxruntime_go.NewAdvancedSession(
 		tmpFile,
 		[]string{"input_values", "attention_mask"},
@@ -112,7 +102,6 @@ func (a *App) startup(ctx context.Context) {
 }
 
 func (a *App) inferenceLoop(ctx context.Context) {
-	// Start EMPTY buffer (important)
 	buf := make([]float32, 0, WINDOW_SIZE*2)
 
 	for {
@@ -131,10 +120,8 @@ func (a *App) inferenceLoop(ctx context.Context) {
 			for len(buf) >= WINDOW_SIZE {
 				window := buf[:WINDOW_SIZE]
 
-				// Copy window into pre-allocated tensor
 				copy(a.inputTensor.GetData(), window)
 
-				// Run inference
 				if err := a.session.Run(); err != nil {
 					log.Printf("inference error: %v", err)
 					break
@@ -142,7 +129,6 @@ func (a *App) inferenceLoop(ctx context.Context) {
 
 				runtime.EventsEmit(ctx, "inference", a.outputTensor.GetData())
 
-				// Slide window
 				buf = buf[HOP_SIZE:]
 			}
 		}
