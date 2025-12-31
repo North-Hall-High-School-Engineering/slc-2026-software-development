@@ -4,16 +4,10 @@ import { Orb } from "./components/orb";
 import { EventsOn } from "../wailsjs/runtime";
 
 export function App(props: any) {
-  const [audioDebug, setAudioDebug] = useState({
-    numSamples: 0,
-    maxValue: 0,
-    minValue: 0,
-  });
+  const [preds, setPreds] = useState<number[]>([0, 0, 0, 0, 0, 0, 0, 0, 0]);
 
   useEffect(() => {
-    EventsOn("audioDebug", (event: any) => {
-      setAudioDebug(event);
-    });
+    EventsOn("inference", setPreds);
   }, []);
 
   return (
@@ -25,12 +19,6 @@ export function App(props: any) {
             noiseIntensity={0.125} 
             color={0xe4ecfa}
             />
-        </div>
-        <div className="w-full h-full items-start p-4">
-          <h3>Audio Debug Info:</h3>
-          <p>Num Samples: {audioDebug.numSamples}</p>
-          <p>Max Value: {audioDebug.maxValue.toFixed(3)}</p>
-          <p>Min Value: {audioDebug.minValue.toFixed(3)}</p>
         </div>
       </div>
     </>
