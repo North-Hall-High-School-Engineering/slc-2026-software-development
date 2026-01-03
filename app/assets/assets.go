@@ -40,10 +40,12 @@ func ExtractEmbeddedFiles() (string, string, error) {
 	libRelPath := path.Join("onnxruntime", goos, goarch, onnxLibraryFile)
 	modelRelPath := path.Join("models", "tone.onnx")
 	modelVerRelPath := path.Join("models", "tone.onnx.version")
+	sileroRelPath := path.Join("models", "silero_vad_16k_op15.onnx")
 
 	libDest := path.Join(runtimeRoot, libRelPath)
 	modelDest := path.Join(runtimeRoot, modelRelPath)
 	modelVerDest := path.Join(runtimeRoot, modelVerRelPath)
+	sileroDest := path.Join(runtimeRoot, sileroRelPath)
 
 	upToDate, err := isUpToDate(modelVerRelPath, modelVerDest)
 	if err != nil {
@@ -58,6 +60,7 @@ func ExtractEmbeddedFiles() (string, string, error) {
 		libRelPath:      libDest,
 		modelRelPath:    modelDest,
 		modelVerRelPath: modelVerDest,
+		sileroRelPath:   sileroDest,
 	}
 
 	for src, dest := range files {
