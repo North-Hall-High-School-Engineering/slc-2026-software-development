@@ -1,8 +1,8 @@
 package main
 
 import (
+	"app/assets"
 	"app/audio"
-	"app/ort"
 	"context"
 	"log"
 
@@ -40,7 +40,7 @@ func (a *App) startup(ctx context.Context) {
 	}
 	a.lo = lo
 
-	libraryPath, modelPath, err := ort.ExtractEmbeddedOrt()
+	libraryPath, modelPath, err := assets.ExtractEmbeddedFiles()
 	if err != nil {
 		panic(err)
 	}
