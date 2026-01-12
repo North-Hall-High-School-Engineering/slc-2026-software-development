@@ -11,7 +11,7 @@ RAVDESS is more robust, larger, newer, and provided much more promising results 
 
 ## Alternatives Considered
 - CMU-MOSEI: hard to get and weird licensing issues
-- TESS: tew few actors and single-gender
+- TESS: too few actors and single-gender
 
 ## Consequences
 ### Positive
