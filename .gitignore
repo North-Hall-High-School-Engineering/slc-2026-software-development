@@ -2,3 +2,5 @@
 model.safetensors
 training_args.bin
 .vscode
+ravdess.zip
+ravdess/
