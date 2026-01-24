@@ -4,7 +4,7 @@ import shutil
 import urllib.request
 import zipfile
 
-from datasets import Dataset
+from datasets import Audio, Dataset
 from tqdm import tqdm
 
 # !wget -q https://zenodo.org/record/1188976/files/Audio_Speech_Actors_01-24.zip
@@ -116,6 +116,15 @@ def main():
         labels.append(emotion2id[emotion])
 
     dataset = Dataset.from_dict({"audio": valid_paths, "label": labels})
+
+    dataset = dataset.cast_column("audio", Audio(sampling_rate=16000))
+
+    split = dataset.train_test_split(test_size=0.2, seed=67)
+    dataset = {"train": split["train"], "test": split["test"]}
+
+    val_split = dataset["train"].train_test_split(test_size=0.1, seed=67)
+    dataset["train"] = val_split["train"]
+    dataset["validation"] = val_split["test"]
 
 
 if __name__ == "__main__":
